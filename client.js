@@ -9,8 +9,9 @@ var socket = new net.Socket();
 var input = process.stdin;
 
 socket.connect({ port: CONFIG.PORT }, function () {
-  var output = process.stdout;
-  console.log('connected to server');
+  var serverAddress = socket.address().address;
+  var serverPort = socket.address().port;
+  console.log('CONNECTED TO: ' + serverAddress + ":" + serverPort);
 });
 
 input.on('data', function (data) {
@@ -18,11 +19,13 @@ input.on('data', function (data) {
 });
 
 socket.on('data', function(data) {
-  console.log(data.toString());
-
-  // socket.end();
+  //console.log(data.toString());
 });
 
 socket.on('end', function () {
   console.log('disconnected from server.');
+});
+
+socket.on('error', function (err) {
+  console.log(err);
 });

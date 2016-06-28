@@ -2,17 +2,13 @@
 var net = require('net');
 var CONFIG = require('./config');
 
-var serverAddress;
+// Connection listener
 var server = net.createServer(function (socket) {
-  // Connection listener
   // same as on 'connection'
-  var socketAddress;
-  var socketPort;
-  console.log("someone connected!");
+  var socketAddress = socket.address().address;
+  var socketPort = socket.address().port;
 
   socket.on('data', function(data) {
-    socketAddress = socket.address().address;
-    socketPort = socket.address().port;
     console.log('SERVER BCAST FROM ' + socketAddress + ":" + socketPort + " : " + data);
   });
   socket.on('end', function () {
