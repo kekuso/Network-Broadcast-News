@@ -19,7 +19,7 @@ input.on('data', function (data) {
 });
 
 socket.on('data', function(data) {
-  //console.log(data.toString());
+  console.log(data.toString());
 });
 
 socket.on('end', function () {
@@ -27,5 +27,5 @@ socket.on('end', function () {
 });
 
 socket.on('error', function (err) {
-  console.log(err);
+  throw err;
 });
