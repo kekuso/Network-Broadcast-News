@@ -5,24 +5,25 @@ var clients = [];
 // Connection listener
 var server = net.createServer(function (socket) {
   clients.push(socket);
-  // same as on 'connection'
+  // console.log("Pushing socket with port : " + socket.remotePort + " onto array.");
   var socketAddress = socket.address().address;
-  var socketPort = socket.address().port;
+  var socketPort = socket.remotePort;
   console.log("CONNECTED: " + socketAddress + ":" + socketPort);
 
   socket.on('data', function(data) {
-    console.log('SERVER BCAST FROM ' + socketAddress + ":" + socketPort + " : " + data);
+    console.log('SERVER BCAST FROM ' + socketAddress + ":" + socket.remotePort + " : " + data);
 
     for(var i = 0; i < clients.length; i++) {
       socketAddress = clients[i].address().address;
-      socketPort = clients[i].address().port;
+      socketPort = clients[i].remotePort;
       clients[i].write(socketAddress + ":" + socketPort + " : " + data);
     }
 
   });
 
-  socket.on('end', function () {
+  socket.on('end', function (socket) {
     console.log('CLOSED: ' + socketAddress + ":" + socketPort);
+    clients.splice(clients.indexOf(socket), 1);
   });
 });
 

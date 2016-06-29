@@ -9,8 +9,8 @@ var socket = new net.Socket();
 var input = process.stdin;
 
 socket.connect({ port: CONFIG.PORT }, function () {
-  var serverAddress = socket.address().address;
-  var serverPort = socket.address().port;
+  var serverAddress = socket.remoteAddress;
+  var serverPort = socket.remotePort;
   console.log('CONNECTED TO: ' + serverAddress + ":" + serverPort);
 });
 
