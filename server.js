@@ -101,13 +101,11 @@ input.on('data', function (data) {
     // check if server wants to kick a client
     console.log("Data: " + data);
     console.log("userArray[j] = " + userArray[j]);
-    if(data.toString() === '\\kick ' + userArray[j].toString()) {
+    if(data.toString() === '\\kick ' + userArray[j].toString() ||
+      data.toString() == '\\kick ' + clients[j].remotePort) {
       console.log("It's kicking time.");
       clients[j].destroy();
     }
-    // if(data.toString().replace(/(\r\n|\n|\r)/gm,"") === (('\\kick ' + userArray[j]).replace(/(\r\n|\n|\r)/gm,""))) {
-    //   console.log("It's kicking time.");
-    // }
     else {
       clients[j].write('[ADMIN]: ' + data);
     }
