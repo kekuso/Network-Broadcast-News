@@ -101,8 +101,8 @@ input.on('data', function (data) {
     // console.log("Data: " + data);
     // console.log("userArray[j] = " + userArray[j]);
     if(data.toString() === '\\kick ' + userArray[j].toString() ||
-      data.toString().replace(/(\r\n|\n|\r)/gm,"") === ('\\kick ' + clients[j].remotePort.toString()).replace(/(\r\n|\n|\r)/gm,"")) {
-      console.log("It's kicking time.");
+      data.toString().replace(/(\r\n|\n|\r)/gm,"") === '\\kick ' + clients[j].remotePort.toString()) {
+      clients[j].write("You're getting kicked.");
       clients[j].destroy();
     }
     else {
