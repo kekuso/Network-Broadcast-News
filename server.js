@@ -18,7 +18,6 @@ var server = net.createServer(function (socket) {
   socket.on('data', function(data) {
     // populate array of usernames
     if(userArray.length < clients.length) {
-      console.log("Data: " + data.toString('utf8'));
       if(data.toString() === '[ADMIN]\n') {
         console.log("YOU ARE NOT WORTHY TO BE [ADMIN]");
         console.log("YOU ARE DEEMED LOSERX");
@@ -29,7 +28,7 @@ var server = net.createServer(function (socket) {
       else {
         userArray[count] = data;
         count++;
-        console.log("Added username: " + data + " to array index " + count);
+        //console.log("Added username: " + data + " to array index " + count);
       }
     }
 
@@ -42,7 +41,7 @@ var server = net.createServer(function (socket) {
       if(i === clients.indexOf(socket)) {
         socketAddress = clients[i].remoteAddress;
         socketPort = clients[i].remotePort;
-        broadcast = socketAddress + ":" + socketPort + " " + userArray[i] + ": " + data;
+        broadcast = (socketAddress + ":" + socketPort + " " + userArray[i] + ": " + data).replace(/(\r\n|\n|\r)/gm,"");
       }
     }
 
