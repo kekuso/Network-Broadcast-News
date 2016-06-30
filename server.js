@@ -76,13 +76,13 @@ var server = net.createServer(function (socket) {
   socket.on('close', function () {
     console.log('CLOSED: ' + socketAddress + ":" + socketPort);
     var index = clients.indexOf(socket);
-    console.log("index: " + index);
+    // console.log("index: " + index);
     clients.splice(index, 1);
-    console.log("clients.length: " + clients.length);
+    // console.log("clients.length: " + clients.length);
     if(userArray.length > 0) {
       userArray.splice(index, 1);
     }
-    console.log("userArray.length: " + userArray.length);
+    // console.log("userArray.length: " + userArray.length);
     count--;
     //console.log("Count = " + count);
   });
@@ -98,10 +98,10 @@ input.on('data', function (data) {
   //console.log("clients.length: " + clients.length);
   for(var j = 0; j < clients.length; j++) {
     // check if server wants to kick a client
-    console.log("Data: " + data);
-    console.log("userArray[j] = " + userArray[j]);
+    // console.log("Data: " + data);
+    // console.log("userArray[j] = " + userArray[j]);
     if(data.toString() === '\\kick ' + userArray[j].toString() ||
-      data.toString() == '\\kick ' + clients[j].remotePort) {
+      data.toString().replace(/(\r\n|\n|\r)/gm,"") === ('\\kick ' + clients[j].remotePort.toString()).replace(/(\r\n|\n|\r)/gm,"")) {
       console.log("It's kicking time.");
       clients[j].destroy();
     }
