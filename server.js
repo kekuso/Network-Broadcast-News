@@ -20,13 +20,10 @@ var server = net.createServer(function (socket) {
     // populate array of usernames
     if(userArray.length < clients.length) {
       // check for admin imposter
-      if(data.toString() === '[ADMIN]\n') {
+      if(data.toString().trim() === '[ADMIN]') {
         console.log("Imposter detected.");
         socket.write("[ADMIN] You are an imposter. ACTIVATING BAN HAMMER");
         socket.destroy();
-        console.log('CLOSED: ' + socketAddress + ":" + socketPort);
-        var index = clients.indexOf(socket);
-        clients.splice(index, 1);
         // userArray[count] = 'IMPOSTER' + count;
         // count++;
       }
@@ -81,9 +78,11 @@ var server = net.createServer(function (socket) {
     var index = clients.indexOf(socket);
     console.log("index: " + index);
     clients.splice(index, 1);
+    console.log("clients.length: " + clients.length);
     if(userArray.length > 0) {
       userArray.splice(index, 1);
     }
+    console.log("userArray.length: " + userArray.length);
     count--;
     //console.log("Count = " + count);
   });
