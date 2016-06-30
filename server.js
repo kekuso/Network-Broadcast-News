@@ -14,13 +14,22 @@ var server = net.createServer(function (socket) {
   var socketPort = socket.remotePort;
   var broadcast;
   console.log("CONNECTED: " + socketAddress + ":" + socketPort);
-
+  socket.setEncoding('utf8');
   socket.on('data', function(data) {
     // populate array of usernames
-    if(userArray.length < clients.length || userArray.length === 0) {
-      userArray[count] = data;
-      count++;
-      console.log("Added username: " + data + " to array index " + count);
+    if(userArray.length < clients.length) {
+      console.log("Data: " + data.toString('utf8'));
+      if(data.toString() === '[ADMIN]\n') {
+        console.log("YOU ARE NOT WORTHY TO BE [ADMIN]");
+        console.log("YOU ARE DEEMED LOSERX");
+        userArray[count] = 'LOSER' + count;
+        count++;
+      }
+      else {
+        userArray[count] = data;
+        count++;
+        console.log("Added username: " + data + " to array index " + count);
+      }
     }
 
     // display client's message on server
