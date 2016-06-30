@@ -19,26 +19,34 @@ var server = net.createServer(function (socket) {
   socket.on('data', function(data) {
     // populate array of usernames
     if(userArray.length < clients.length) {
+      // check for admin imposter
       if(data.toString() === '[ADMIN]\n') {
         console.log("Imposter detected.");
-        socket.write("[ADMIN] You are an imposter. Leave or forever be known as one.");
-        userArray[count] = 'IMPOSTER' + count;
-        count++;
+        socket.write("[ADMIN] You are an imposter. ACTIVATING BAN HAMMER");
+        socket.destroy();
+        console.log('CLOSED: ' + socketAddress + ":" + socketPort);
+        var index = clients.indexOf(socket);
+        clients.splice(index, 1);
+        // userArray[count] = 'IMPOSTER' + count;
+        // count++;
       }
       else {
         for(var k = 0; k < userArray.length; k++) {
+          //console.log("Comparing " + data.toString().replace(/(\r\n|\n|\r)/gm,"") + " and " + userArray[k].replace(/(\r\n|\n|\r)/gm,""));
+          // check for duplicate username
           if(data.toString() === userArray[k]) {
             socket.write("That username is already taken. You will be named John Doe X.");
             userArray[count] = 'John Doe ' + count;
             count++;
             duplicate = true;
+            break;
           }
           else {
             duplicate = false;
           }
         }
         if(!duplicate) {
-          userArray[count] = data;
+          userArray[count] = data.toString();
           count++;
           socket.write("Welcome " + data);
           duplicate = false;
@@ -67,27 +75,35 @@ var server = net.createServer(function (socket) {
     }
   });
 
-  // broadcast server's message to all clients
-  input.on('data', function (data) {
-    socket.write("[ADMIN]: " + data);
-  });
-
   // decrement arrays when a client disconnects
-  socket.on('end', function (socket) {
+  socket.on('close', function () {
     console.log('CLOSED: ' + socketAddress + ":" + socketPort);
     var index = clients.indexOf(socket);
+    console.log("index: " + index);
     clients.splice(index, 1);
-    userArray.splice(index, 1);
+    if(userArray.length > 0) {
+      userArray.splice(index, 1);
+    }
     count--;
+    //console.log("Count = " + count);
   });
 });
 
 server.listen(CONFIG.PORT, function () {
   var PORT = server.address().port;
   console.log('Server listening on 127.0.0.1:' + CONFIG.PORT);
+
+  // broadcast server's message to all clients
+  input.on('data', function (data) {
+    //console.log("clients.length: " + clients.length);
+    for(var j = 0; j < clients.length; j++) {
+        clients[j].write('[ADMIN]: ' + data);
+    }
+  });
 });
 
 server.on('error', function (err) {
   throw err;
 });
+
 
