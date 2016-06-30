@@ -92,18 +92,28 @@ var server = net.createServer(function (socket) {
 server.listen(CONFIG.PORT, function () {
   var PORT = server.address().port;
   console.log('Server listening on 127.0.0.1:' + CONFIG.PORT);
+});
 
-  // broadcast server's message to all clients
-  input.on('data', function (data) {
-    //console.log("clients.length: " + clients.length);
-    for(var j = 0; j < clients.length; j++) {
-        clients[j].write('[ADMIN]: ' + data);
+// broadcast server's message to all clients
+input.on('data', function (data) {
+  //console.log("clients.length: " + clients.length);
+  for(var j = 0; j < clients.length; j++) {
+    // check if server wants to kick a client
+    console.log("Data: " + data);
+    console.log("userArray[j] = " + userArray[j]);
+    if(data.toString() === '\\kick ' + userArray[j].toString()) {
+      console.log("It's kicking time.");
+      clients[j].destroy();
     }
-  });
+    // if(data.toString().replace(/(\r\n|\n|\r)/gm,"") === (('\\kick ' + userArray[j]).replace(/(\r\n|\n|\r)/gm,""))) {
+    //   console.log("It's kicking time.");
+    // }
+    else {
+      clients[j].write('[ADMIN]: ' + data);
+    }
+  }
 });
 
 server.on('error', function (err) {
   throw err;
 });
-
-
