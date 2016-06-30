@@ -14,7 +14,7 @@ var server = net.createServer(function (socket) {
   var socketPort = socket.remotePort;
   var broadcast;
   console.log("CONNECTED: " + socketAddress + ":" + socketPort);
-  socket.setEncoding('utf8');
+
   socket.on('data', function(data) {
     // populate array of usernames
     if(userArray.length < clients.length) {
@@ -22,6 +22,7 @@ var server = net.createServer(function (socket) {
       if(data.toString() === '[ADMIN]\n') {
         console.log("YOU ARE NOT WORTHY TO BE [ADMIN]");
         console.log("YOU ARE DEEMED LOSERX");
+        socket.write("You fool.");
         userArray[count] = 'LOSER' + count;
         count++;
       }
@@ -41,7 +42,7 @@ var server = net.createServer(function (socket) {
       if(i === clients.indexOf(socket)) {
         socketAddress = clients[i].remoteAddress;
         socketPort = clients[i].remotePort;
-        broadcast = userArray[i] + ": " + socketAddress + ":" + socketPort + " : " + data;
+        broadcast = socketAddress + ":" + socketPort + " " + userArray[i] + ": " + data;
       }
     }
 
