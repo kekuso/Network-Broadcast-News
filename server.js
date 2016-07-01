@@ -20,7 +20,7 @@ var server = net.createServer(function (socket) {
     // populate array of usernames
     if(userArray.length < clients.length) {
       // check for admin imposter
-      if(data.toString().trim() === '[ADMIN]') {
+      if(data.toString().toUpperCase().trim() === '[ADMIN]') {
         console.log("Imposter detected.");
         socket.write("[ADMIN] You are an imposter. ACTIVATING BAN HAMMER");
         socket.destroy();
